@@ -1,17 +1,8 @@
-type mergeRequire<T> = {
+type MergeRequire<T> = {
   [K in keyof T]: T[K];
 };
 
-type RequiredByKeys<T, K extends keyof T> = {
-  [S in keyof T as S extends K ? S : never]: T[S];
-} & {
-  [P in Exclude<keyof T, K>]?: T[P];
-};
+type RequiredByKeys<T, K extends PropertyKey = keyof T> = MergeRequire<
+  T & Required<Pick<T, K extends keyof T ? K : never>>
+>
 
-interface User {
-  name?: string;
-  age?: number;
-  address?: string;
-}
-
-type a = RequiredByKeys<User, "name">;
